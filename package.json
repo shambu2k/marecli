@@ -1,0 +1,19 @@
+{
+  "name": "marecli",
+  "version": "1.0.0",
+  "description": "An interactive cli tool to do mundane git stuff",
+  "main": "src/index.js",
+  "type": "module", 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "marecli": "./src/index.js"
+  },
+  "author": "Sidharth Shambu",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^9.2.5",
+    "shelljs": "^0.8.5"
+  }
+}
