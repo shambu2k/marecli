@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "An interactive cli tool to do mundane git stuff",
   "main": "src/index.js",
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,11 @@
     "marecli": "./src/index.js"
   },
   "author": "Sidharth Shambu",
+  "repository": "https://github.com/shambu2k/marecli",
+  "keywords": [
+    "cli",
+    "git"
+  ],
   "license": "ISC",
   "dependencies": {
     "inquirer": "^9.2.5",
