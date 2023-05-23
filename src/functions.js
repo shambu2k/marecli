@@ -99,7 +99,7 @@ export const raiseUpdateTag = async (inquirer) => {
 
   colorLog(`Committing changes...`, "green");
   shell.exec(
-    `git commit -m "chore: [skip ci] update tags ${oldTags.join(
+    `git commit -m "chore: [skip ci] ${jiraID} update tags ${oldTags.join(
       ", "
     )} -> ${newTagTrimmed}"`
   );
