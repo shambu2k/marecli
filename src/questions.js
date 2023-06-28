@@ -62,7 +62,8 @@ export const RAISE_UPDATE_TAG_PROMPTS = [
   {
     type: "input",
     name: "releaseBranch",
-    message: "Enter the release branch:",
+    message:
+      "Enter the release branch: (Must be in the format - release/<version>",
     validate: (value) =>
       validateInput(value, "Please enter the release branch"),
   },
