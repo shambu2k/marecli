@@ -5,6 +5,7 @@ import {
   CREATE_BRANCH_PROMPTS,
   RAISE_RELEASE_PROMPTS,
   RAISE_UPDATE_TAG_PROMPTS,
+  SYNC_CURRENT_BRANCH,
 } from "./questions.js";
 
 export const createBranch = async (inquirer) => {
@@ -67,13 +68,12 @@ export const raiseRelease = async (inquirer) => {
 
 export const raiseUpdateTag = async (inquirer) => {
   const updateTagAnswers = await inquirer.prompt(RAISE_UPDATE_TAG_PROMPTS);
-  debugger;
-  const { jiraID, releaseBranch, k8sPath, oldTag, newTag } = trimAnswers(
+  const { jiraID, releaseBranch, k8sPath, environments, newTag } = trimAnswers(
     updateTagAnswers,
-    ["jiraID", "releaseBranch", "k8sPath", "oldTag", "newTag"]
+    ["jiraID", "releaseBranch", "k8sPath", "environments", "newTag"]
   );
   const updatTagBranch = `updateTags-${jiraID}-${CURRENT_DATE_DDMMYY()}`;
-  const oldTags = oldTag.split(",").map((tag) => tag.trim());
+  const environmentsList = environments.split(",").map((env) => env.trim());
   const newTagTrimmed = newTag.trim();
 
   colorLog(`Syncing ${releaseBranch}`, "green");
@@ -84,13 +84,15 @@ export const raiseUpdateTag = async (inquirer) => {
   shell.exec(`git checkout -b ${updatTagBranch}`);
 
   colorLog(
-    `Updating release tags to ${newTag} from ${oldTag} in deployment.yaml files in ${k8sPath}`,
+    `Updating release tags to ${newTag} for ${environmentsList} in deployment.yaml files in ${k8sPath}`,
     "green"
   );
-  for (let oldTagTrimmed of oldTags) {
-    colorLog(`Updating tag ${oldTagTrimmed} to ${newTagTrimmed}`, "green");
+
+  const prefix = releaseBranch.split("/")[1].trim();
+  for (let environment of environmentsList) {
+    colorLog(`Updating ${environment} tags to ${newTagTrimmed}`, "green");
     shell.exec(
-      `find ${k8sPath} -type f -name 'deployment.yaml' -exec perl -pi -e 's/${oldTagTrimmed}/${newTagTrimmed}/g' {} \\;`
+      `LC_ALL=en_US.UTF-8 find ${k8sPath}/${environment} -type f -name 'deployment.yaml' -exec perl -pi -e 's/${prefix}\\.\\K\\S+/${newTagTrimmed}"/g' {}  \\;`
     );
   }
 
@@ -99,9 +101,9 @@ export const raiseUpdateTag = async (inquirer) => {
 
   colorLog(`Committing changes...`, "green");
   shell.exec(
-    `git commit -m "chore: [skip ci] ${jiraID} update tags ${oldTags.join(
+    `git commit -m "chore: [skip ci] ${jiraID} update tags for ${environmentsList.join(
       ", "
-    )} -> ${newTagTrimmed}"`
+    )} to ${newTagTrimmed}"`
   );
 
   shell.exec(`git push origin ${updatTagBranch}`);
@@ -152,4 +154,27 @@ export const raiseBackmerge = async (inquirer) => {
       "green"
     );
   }
+};
+
+export const syncCurrentBranch = async (inquirer) => {
+  const answers = await inquirer.prompt(SYNC_CURRENT_BRANCH);
+
+  const { syncFromBranch } = trimAnswers(answers, ["syncFromBranch"]);
+  let currentBranch;
+
+  shell.exec("git symbolic-ref --short HEAD", (code, stdout, stderr) => {
+    if (code === 0) {
+      currentBranch = stdout.trim();
+
+      colorLog(`Syncing ${syncFromBranch}`, "green");
+      shell.exec(`git checkout ${syncFromBranch} && git pull`);
+
+      colorLog(`Merging ${syncFromBranch} to ${currentBranch}`, "green");
+      shell.exec(
+        `git checkout ${currentBranch} && git merge ${syncFromBranch}`
+      );
+    } else {
+      console.error("Failed to retrieve the Git branch:", stderr);
+    }
+  });
 };

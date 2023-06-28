@@ -6,6 +6,7 @@ import {
   raiseRelease,
   raiseUpdateTag,
   raiseBackmerge,
+  syncCurrentBranch,
 } from "./functions.js";
 import { CHECK_GIT_DIR, colorLog } from "./utils.js";
 import { INITIAL_QUESTIONS } from "./questions.js";
@@ -25,6 +26,9 @@ switch (answers.operation) {
     break;
   case "Raise backmerge":
     raiseBackmerge(inquirer);
+    break;
+  case "Sync current branch":
+    syncCurrentBranch(inquirer);
     break;
   default:
     colorLog("Feature not yet implemented.", "yellow");

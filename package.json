@@ -1,6 +1,6 @@
 {
   "name": "marecli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An interactive cli tool to do mundane git stuff",
   "main": "src/index.js",
   "type": "module",

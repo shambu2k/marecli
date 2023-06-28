@@ -10,6 +10,7 @@ export const INITIAL_QUESTIONS = [
       "Raise master to release",
       "Update tags",
       "Raise backmerge",
+      "Sync current branch",
     ],
   },
 ];
@@ -73,15 +74,24 @@ export const RAISE_UPDATE_TAG_PROMPTS = [
   },
   {
     type: "input",
-    name: "oldTag",
-    message:
-      "Enter the old tags (if there are different tags, enter them separated by comma):",
-    validate: (value) => validateInput(value, "Please enter the old tag(s)"),
+    name: "environments",
+    message: "Enter the environment(s) to update tags (gamma,prod-test,prod):",
+    default: "gamma,prod-test,prod",
   },
   {
     type: "input",
     name: "newTag",
     message: "Enter the new tag:",
     validate: (value) => validateInput(value, "Please enter the new tag"),
+  },
+];
+
+export const SYNC_CURRENT_BRANCH = [
+  {
+    type: "input",
+    name: "syncFromBranch",
+    message:
+      "Make sure all your changes are committed!! and then Enter the branch to sync from:",
+    default: "master",
   },
 ];
