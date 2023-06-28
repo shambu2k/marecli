@@ -1,11 +1,12 @@
 {
   "name": "marecli",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "An interactive cli tool to do mundane git stuff",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "minify": "terser src/index.js --output dist/index.js && terser src/functions.js --output dist/functions.js && terser src/questions.js --output dist/questions.js && terser src/utils.js --output dist/utils.js"
   },
   "bin": {
     "marecli": "./src/index.js"
@@ -17,8 +18,14 @@
     "git"
   ],
   "license": "ISC",
+  "files": [
+    "dist/*"
+  ],
   "dependencies": {
     "inquirer": "^9.2.5",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "terser": "^5.18.2"
   }
 }

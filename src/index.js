@@ -13,23 +13,27 @@ import { INITIAL_QUESTIONS } from "./questions.js";
 
 CHECK_GIT_DIR();
 
-const answers = await inquirer.prompt(INITIAL_QUESTIONS);
-switch (answers.operation) {
-  case "Create branch (feature/hotfix/bugfix)":
-    createBranch(inquirer);
-    break;
-  case "Raise master to release":
-    raiseRelease(inquirer);
-    break;
-  case "Update tags":
-    raiseUpdateTag(inquirer);
-    break;
-  case "Raise backmerge":
-    raiseBackmerge(inquirer);
-    break;
-  case "Sync current branch":
-    syncCurrentBranch(inquirer);
-    break;
-  default:
-    colorLog("Feature not yet implemented.", "yellow");
-}
+const run = async () => {
+  const answers = await inquirer.prompt(INITIAL_QUESTIONS);
+  switch (answers.operation) {
+    case "Create branch (feature/hotfix/bugfix)":
+      createBranch(inquirer);
+      break;
+    case "Raise master to release":
+      raiseRelease(inquirer);
+      break;
+    case "Update tags":
+      raiseUpdateTag(inquirer);
+      break;
+    case "Raise backmerge":
+      raiseBackmerge(inquirer);
+      break;
+    case "Sync current branch":
+      syncCurrentBranch(inquirer);
+      break;
+    default:
+      colorLog("Feature not yet implemented.", "yellow");
+  }
+};
+
+run();
